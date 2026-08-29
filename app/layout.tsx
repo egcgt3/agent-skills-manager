@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Header from "./components/Header";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -24,9 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-screen">
-        <div className="navbar bg-base-100 shadow-sm">
-          <a className="btn btn-ghost text-xl">daisyUI</a>
-        </div>
+        <Header />
         <main>
           {children}
         </main>
