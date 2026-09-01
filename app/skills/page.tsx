@@ -3,10 +3,10 @@ import { getSkills } from "./skills"
 export default async function SkillsPage() {
   const skills = await getSkills();
   return (
-    <section>
+    <section className="p-4 flex flex-col gap-4 max-w-md mx-auto">
       <h1>Skills</h1>
-      <p><Link href="/skills/create">Create a Skill</Link></p>
-      <ul>
+      <Link href="/skills/create" className="btn btn-primary self-end">Create a Skill</Link>
+      <ul className="menu">
         {skills?.map(skill => {
           return (
             <li key={skill.id}>
