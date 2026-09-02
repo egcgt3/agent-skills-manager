@@ -6,14 +6,16 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 
 /**
- * Login Page - CSR (Client-Side Rendering)
- * Uses client-side state for form handling and authentication
+ * Register Page - CSR (Client-Side Rendering)
+ * Uses client-side state for form handling and registration
  */
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
-  const { login, isAuthenticated, isLoading } = useAuth();
+  const { register, isAuthenticated, isLoading } = useAuth();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -26,13 +28,24 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      await login({ email, password });
+      await register({ email, password, name });
       router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
       setIsSubmitting(false);
     }
@@ -40,9 +53,9 @@ export default function LoginPage() {
 
   return (
     <>
-      <h2 className="card-title text-2xl justify-center">Welcome Back</h2>
+      <h2 className="card-title text-2xl justify-center">Create Account</h2>
       <p className="text-center text-base-content/70">
-        Sign in to manage your agent skills
+        Join to create and share agent skills
       </p>
 
       <form onSubmit={handleSubmit} className="mt-4">
@@ -53,6 +66,20 @@ export default function LoginPage() {
         )}
 
         <div className="form-control">
+          <label className="label">
+            <span className="label-text">Name</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Your name"
+            className="input input-bordered w-full"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-control mt-4">
           <label className="label">
             <span className="label-text">Email</span>
           </label>
@@ -77,6 +104,21 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            minLength={6}
+          />
+        </div>
+
+        <div className="form-control mt-4">
+          <label className="label">
+            <span className="label-text">Confirm Password</span>
+          </label>
+          <input
+            type="password"
+            placeholder="••••••••"
+            className="input input-bordered w-full"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
           />
         </div>
 
@@ -89,7 +131,7 @@ export default function LoginPage() {
             {isSubmitting ? (
               <span className="loading loading-spinner loading-sm"></span>
             ) : (
-              "Sign In"
+              "Create Account"
             )}
           </button>
         </div>
@@ -98,9 +140,9 @@ export default function LoginPage() {
       <div className="divider">OR</div>
 
       <p className="text-center">
-        Don&apos;t have an account?{" "}
-        <Link href="/register" className="link link-primary">
-          Sign up
+        Already have an account?{" "}
+        <Link href="/login" className="link link-primary">
+          Sign in
         </Link>
       </p>
     </>
