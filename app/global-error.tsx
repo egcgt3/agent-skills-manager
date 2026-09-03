@@ -1,24 +1,35 @@
-'use client' // Error boundaries must be Client Components
+"use client";
+
+import Link from "next/link";
 
 export default function GlobalError({
   error,
-  retry,
+  reset,
 }: {
-  error: Error & { digest?: string }
-  retry: () => void
+  error: Error & { digest?: string };
+  reset: () => void;
 }) {
   return (
-    // global-error must include html and body tags
     <html>
       <body>
-         <div className="text-center py-16">
-          <h2>Something went wrong!</h2>
-          <p>{error.message}</p>
-          <button onClick={retry} className="btn btn-primary">
-            Try again
-          </button>
+        <div className="min-h-[50vh] flex items-center justify-center p-4">
+          <div className="text-center">
+            <div className="text-6xl mb-4">😵</div>
+            <h2 className="text-2xl font-bold mb-2">Something went wrong!</h2>
+            <p className="text-base-content/70 mb-4">
+              {error.message || "An unexpected error occurred"}
+            </p>
+            <div className="flex gap-4 justify-center">
+              <button onClick={() => reset()} className="btn btn-primary">
+                Try again
+              </button>
+              <Link href="/" className="btn btn-ghost">
+                Go home
+              </Link>
+            </div>
+          </div>
         </div>
       </body>
     </html>
-  )
-};
+  );
+}
