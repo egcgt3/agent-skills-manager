@@ -26,7 +26,15 @@ npx prisma studio                 # inspect data
 docker compose up -d              # start local Postgres (skills-db, port 5432, db "skills_db")
 ```
 
-There is no test suite configured in this repo.
+Tests (Vitest + React Testing Library, jsdom environment; config in `vitest.config.mts` / `vitest.setup.ts`). Test files live under `tests/` at the repo root, mirroring the `app/` structure (e.g. `tests/components/CopyButton.test.tsx` tests `app/components/CopyButton.tsx`) rather than sitting next to the source files:
+
+```bash
+npm run test         # vitest run (single run)
+npm run test:watch   # vitest (watch mode)
+npx vitest run tests/components/CopyButton.test.tsx   # run a single test file
+```
+
+`@` resolves to `app/` in tests too (aliased separately in `vitest.config.mts` since Vitest doesn't read `tsconfig.json` paths) — import source files via `@/...` from `tests/`, not relative paths. Note `vitest` itself is also pulled in transitively via `@prisma/composer` → `alchemy` → `@effect/vitest`, but the project's own test setup is pinned as an explicit devDependency — don't rely on the transitive copy.
 
 Local Postgres from `docker-compose.yml` expects `DATABASE_URL` (or `DATABASE_URL_LOCAL`, see `.env`) pointing at `postgres://postgres:postgres@localhost:5432/skills_db`.
 
