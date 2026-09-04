@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 interface SkillFormData {
@@ -17,17 +18,21 @@ interface ActionResult {
 }
 
 export async function createSkill(
-  data: SkillFormData,
-  userId: number
+  data: SkillFormData
 ): Promise<ActionResult> {
   try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: "Not authenticated" };
+    }
+
     const skill = await prisma.skill.create({
       data: {
         name: data.name,
         description: data.description,
         content: data.content,
         isPublic: data.isPublic,
-        authorId: userId,
+        authorId: user.userId,
       },
     });
 
@@ -43,17 +48,21 @@ export async function createSkill(
 
 export async function updateSkill(
   id: number,
-  data: SkillFormData,
-  userId: number
+  data: SkillFormData
 ): Promise<ActionResult> {
   try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: "Not authenticated" };
+    }
+
     // Verify ownership
     const existing = await prisma.skill.findUnique({
       where: { id },
       select: { authorId: true },
     });
 
-    if (!existing || existing.authorId !== userId) {
+    if (!existing || existing.authorId !== user.userId) {
       return { success: false, error: "Not authorized to edit this skill" };
     }
 
@@ -79,17 +88,21 @@ export async function updateSkill(
 }
 
 export async function deleteSkill(
-  id: number,
-  userId: number
+  id: number
 ): Promise<ActionResult> {
   try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: "Not authenticated" };
+    }
+
     // Verify ownership
     const existing = await prisma.skill.findUnique({
       where: { id },
       select: { authorId: true },
     });
 
-    if (!existing || existing.authorId !== userId) {
+    if (!existing || existing.authorId !== user.userId) {
       return { success: false, error: "Not authorized to delete this skill" };
     }
 
