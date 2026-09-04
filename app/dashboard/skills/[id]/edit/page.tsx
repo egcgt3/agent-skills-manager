@@ -88,16 +88,12 @@ export default function EditSkillPage({ params }: PageProps) {
     setIsSubmitting(true);
 
     try {
-      const result = await updateSkill(
-        skillId,
-        {
-          name: name.trim(),
-          description: description.trim(),
-          content: content.trim(),
-          isPublic,
-        },
-        user.id
-      );
+      const result = await updateSkill(skillId, {
+        name: name.trim(),
+        description: description.trim(),
+        content: content.trim(),
+        isPublic,
+      });
 
       if (result.success) {
         router.push("/dashboard");

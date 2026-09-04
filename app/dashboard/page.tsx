@@ -62,7 +62,7 @@ export default function DashboardPage() {
 
     setDeletingId(id);
     try {
-      const result = await deleteSkill(id, user.id);
+      const result = await deleteSkill(id);
       if (result.success) {
         setSkills(skills.filter((s) => s.id !== id));
       } else {

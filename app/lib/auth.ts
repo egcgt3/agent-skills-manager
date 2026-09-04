@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -6,11 +7,18 @@ const SALT_ROUNDS = 10;
 const TOKEN_EXPIRY_HOURS = parseInt(process.env.AUTH_TOKEN_EXPIRY_HOURS || "24");
 const AUTH_COOKIE_NAME = "auth_token";
 
+function getJwtSecret(): Uint8Array {
+  const secret = process.env.AUTH_JWT_SECRET;
+  if (!secret) {
+    throw new Error("AUTH_JWT_SECRET environment variable is not set");
+  }
+  return new TextEncoder().encode(secret);
+}
+
 export interface TokenPayload {
   userId: number;
   email: string;
   name: string;
-  exp: number;
 }
 
 /**
@@ -31,39 +39,31 @@ export async function verifyPassword(
 }
 
 /**
- * Generate a simple base64 encoded token with expiration
- * In production, use a proper JWT library
+ * Generate a signed JWT (HS256) with expiration
  */
-export function generateToken(user: {
+export async function generateToken(user: {
   id: number;
   email: string;
   name: string;
-}): string {
-  const payload: TokenPayload = {
+}): Promise<string> {
+  return new SignJWT({
     userId: user.id,
     email: user.email,
     name: user.name,
-    exp: Date.now() + TOKEN_EXPIRY_HOURS * 60 * 60 * 1000,
-  };
-
-  return Buffer.from(JSON.stringify(payload)).toString("base64");
+  })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(`${TOKEN_EXPIRY_HOURS}h`)
+    .sign(getJwtSecret());
 }
 
 /**
- * Verify and decode a token
+ * Verify and decode a signed JWT
  */
-export function verifyToken(token: string): TokenPayload | null {
+export async function verifyToken(token: string): Promise<TokenPayload | null> {
   try {
-    const payload = JSON.parse(
-      Buffer.from(token, "base64").toString("utf-8")
-    ) as TokenPayload;
-
-    // Check expiration
-    if (payload.exp < Date.now()) {
-      return null;
-    }
-
-    return payload;
+    const { payload } = await jwtVerify(token, getJwtSecret());
+    return payload as unknown as TokenPayload;
   } catch {
     return null;
   }
