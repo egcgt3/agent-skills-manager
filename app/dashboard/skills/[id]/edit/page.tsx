@@ -110,7 +110,11 @@ export default function EditSkillPage({ params }: PageProps) {
   if (isLoading || loadingSkill) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
-        <span className="loading loading-spinner loading-lg"></span>
+        <span
+          className="loading loading-spinner loading-lg"
+          role="status"
+          aria-label="Loading"
+        ></span>
       </div>
     );
   }
@@ -118,7 +122,7 @@ export default function EditSkillPage({ params }: PageProps) {
   if (error && !name) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-2xl">
-        <div className="alert alert-error">
+        <div className="alert alert-error" role="alert">
           <span>{error}</span>
         </div>
         <Link href="/dashboard" className="btn btn-ghost mt-4">
@@ -145,16 +149,17 @@ export default function EditSkillPage({ params }: PageProps) {
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             {error && (
-              <div className="alert alert-error">
+              <div className="alert alert-error" role="alert">
                 <span>{error}</span>
               </div>
             )}
 
             <div className="form-control w-full">
-              <label className="label">
+              <label className="label" htmlFor="edit-skill-name">
                 <span className="label-text font-medium">Skill Name</span>
               </label>
               <input
+                id="edit-skill-name"
                 type="text"
                 placeholder="e.g., web-design-guidelines"
                 className="input input-bordered w-full"
@@ -166,10 +171,11 @@ export default function EditSkillPage({ params }: PageProps) {
             </div>
 
             <div className="form-control w-full">
-              <label className="label">
+              <label className="label" htmlFor="edit-skill-description">
                 <span className="label-text font-medium">Description</span>
               </label>
               <input
+                id="edit-skill-description"
                 type="text"
                 placeholder="Brief description of what this skill does"
                 className="input input-bordered w-full"
@@ -181,12 +187,13 @@ export default function EditSkillPage({ params }: PageProps) {
             </div>
 
             <div className="form-control w-full">
-              <label className="label">
+              <label className="label" htmlFor="edit-skill-content">
                 <span className="label-text font-medium">
                   Skill Content (Markdown)
                 </span>
               </label>
               <textarea
+                id="edit-skill-content"
                 placeholder="Enter your skill content in markdown format..."
                 className="textarea textarea-bordered w-full h-64 font-mono text-sm"
                 value={content}
@@ -218,10 +225,14 @@ export default function EditSkillPage({ params }: PageProps) {
                 type="submit"
                 className="btn btn-primary"
                 disabled={isSubmitting}
+                aria-busy={isSubmitting}
               >
                 {isSubmitting ? (
                   <>
-                    <span className="loading loading-spinner loading-sm"></span>
+                    <span
+                      className="loading loading-spinner loading-sm"
+                      aria-hidden="true"
+                    ></span>
                     Saving...
                   </>
                 ) : (

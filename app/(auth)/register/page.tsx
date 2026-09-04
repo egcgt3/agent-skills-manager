@@ -53,23 +53,24 @@ export default function RegisterPage() {
 
   return (
     <>
-      <h2 className="card-title text-2xl justify-center">Create Account</h2>
+      <h1 className="card-title text-2xl justify-center">Create Account</h1>
       <p className="text-center text-base-content/70">
         Join to create and share agent skills
       </p>
 
       <form onSubmit={handleSubmit} className="mt-4">
         {error && (
-          <div className="alert alert-error mb-4">
+          <div className="alert alert-error mb-4" role="alert">
             <span>{error}</span>
           </div>
         )}
 
         <div className="form-control">
-          <label className="label">
+          <label className="label" htmlFor="register-name">
             <span className="label-text">Name</span>
           </label>
           <input
+            id="register-name"
             type="text"
             placeholder="Your name"
             className="input input-bordered w-full"
@@ -80,10 +81,11 @@ export default function RegisterPage() {
         </div>
 
         <div className="form-control mt-4">
-          <label className="label">
+          <label className="label" htmlFor="register-email">
             <span className="label-text">Email</span>
           </label>
           <input
+            id="register-email"
             type="email"
             placeholder="you@example.com"
             className="input input-bordered w-full"
@@ -94,10 +96,11 @@ export default function RegisterPage() {
         </div>
 
         <div className="form-control mt-4">
-          <label className="label">
+          <label className="label" htmlFor="register-password">
             <span className="label-text">Password</span>
           </label>
           <input
+            id="register-password"
             type="password"
             placeholder="••••••••"
             className="input input-bordered w-full"
@@ -105,20 +108,23 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
+            aria-invalid={!!error}
           />
         </div>
 
         <div className="form-control mt-4">
-          <label className="label">
+          <label className="label" htmlFor="register-confirm-password">
             <span className="label-text">Confirm Password</span>
           </label>
           <input
+            id="register-confirm-password"
             type="password"
             placeholder="••••••••"
             className="input input-bordered w-full"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
+            aria-invalid={!!error}
           />
         </div>
 
@@ -127,9 +133,16 @@ export default function RegisterPage() {
             type="submit"
             className="btn btn-primary w-full"
             disabled={isSubmitting}
+            aria-busy={isSubmitting}
           >
             {isSubmitting ? (
-              <span className="loading loading-spinner loading-sm"></span>
+              <>
+                <span
+                  className="loading loading-spinner loading-sm"
+                  aria-hidden="true"
+                ></span>
+                <span className="sr-only">Creating account…</span>
+              </>
             ) : (
               "Create Account"
             )}

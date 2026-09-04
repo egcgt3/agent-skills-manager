@@ -18,6 +18,9 @@ export default function CopyButton({ text }: { text: string }) {
       className="btn btn-ghost btn-sm btn-square"
       aria-label={copied ? "Copied" : "Copy skill content"}
     >
+      <span className="sr-only" aria-live="polite">
+        {copied ? "Copied to clipboard" : ""}
+      </span>
       {copied ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"

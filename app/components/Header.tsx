@@ -10,13 +10,19 @@ export default function Header() {
     <div className="navbar bg-base-200 shadow-lg">
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+          <div
+            tabIndex={0}
+            role="button"
+            aria-label="Toggle navigation menu"
+            className="btn btn-ghost lg:hidden"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -58,16 +64,21 @@ export default function Header() {
       </div>
       <div className="navbar-end">
         {isLoading ? (
-          <span className="loading loading-spinner loading-sm"></span>
+          <span
+            className="loading loading-spinner loading-sm"
+            role="status"
+            aria-label="Loading"
+          ></span>
         ) : isAuthenticated ? (
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
               role="button"
+              aria-label="Account menu"
               className="btn btn-ghost btn-circle avatar placeholder"
             >
               <div className="bg-primary text-primary-content w-10 rounded-full flex items-center justify-center">
-                <span className="text-lg">
+                <span className="text-lg" aria-hidden="true">
                   {user?.name?.charAt(0).toUpperCase()}
                 </span>
               </div>

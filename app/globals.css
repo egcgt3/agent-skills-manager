@@ -7,6 +7,17 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* WCAG 1.4.3 contrast fixes for the dark theme — verified via WCAG relative
+   luminance against this theme's actual OKLCH tokens (see _plans/fix-wcag-accessibility-issues.md) */
+[data-theme="dark"] {
+  --color-secondary: oklch(54% 0.241 354.308);
+  --color-primary-content: oklch(99.8% 0.018 272.314);
+  --color-primary-link: oklch(68% 0.233 277.117);
+}
+.link-primary {
+  color: var(--color-primary-link, var(--color-primary));
+}
+
 /* Custom utilities */
 .prose-skill {
   max-width: 80ch;

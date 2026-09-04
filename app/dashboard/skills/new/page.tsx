@@ -59,7 +59,11 @@ export default function NewSkillPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
-        <span className="loading loading-spinner loading-lg"></span>
+        <span
+          className="loading loading-spinner loading-lg"
+          role="status"
+          aria-label="Loading"
+        ></span>
       </div>
     );
   }
@@ -81,16 +85,17 @@ export default function NewSkillPage() {
 
           <form onSubmit={handleSubmit} className="mt-4">
             {error && (
-              <div className="alert alert-error mb-4">
+              <div className="alert alert-error mb-4" role="alert">
                 <span>{error}</span>
               </div>
             )}
 
             <div className="form-control">
-              <label className="label">
+              <label className="label" htmlFor="new-skill-name">
                 <span className="label-text">Skill Name</span>
               </label>
               <input
+                id="new-skill-name"
                 type="text"
                 placeholder="e.g., web-design-guidelines"
                 className="input input-bordered w-full"
@@ -102,10 +107,11 @@ export default function NewSkillPage() {
             </div>
 
             <div className="form-control mt-4">
-              <label className="label">
+              <label className="label" htmlFor="new-skill-description">
                 <span className="label-text">Description</span>
               </label>
               <input
+                id="new-skill-description"
                 type="text"
                 placeholder="Brief description of what this skill does"
                 className="input input-bordered w-full"
@@ -117,10 +123,11 @@ export default function NewSkillPage() {
             </div>
 
             <div className="form-control mt-4">
-              <label className="label">
+              <label className="label" htmlFor="new-skill-content">
                 <span className="label-text">Skill Content (Markdown)</span>
               </label>
               <textarea
+                id="new-skill-content"
                 placeholder="Enter your skill here"
                 className="textarea textarea-bordered w-full h-64 font-mono text-sm skill-content"
                 value={content}
@@ -152,10 +159,14 @@ export default function NewSkillPage() {
                 type="submit"
                 className="btn btn-primary"
                 disabled={isSubmitting}
+                aria-busy={isSubmitting}
               >
                 {isSubmitting ? (
                   <>
-                    <span className="loading loading-spinner loading-sm"></span>
+                    <span
+                      className="loading loading-spinner loading-sm"
+                      aria-hidden="true"
+                    ></span>
                     Creating...
                   </>
                 ) : (

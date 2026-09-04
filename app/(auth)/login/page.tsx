@@ -40,23 +40,24 @@ export default function LoginPage() {
 
   return (
     <>
-      <h2 className="card-title text-2xl justify-center">Welcome Back</h2>
+      <h1 className="card-title text-2xl justify-center">Welcome Back</h1>
       <p className="text-center text-base-content/70">
         Sign in to manage your agent skills
       </p>
 
       <form onSubmit={handleSubmit} className="mt-4">
         {error && (
-          <div className="alert alert-error mb-4">
+          <div className="alert alert-error mb-4" role="alert">
             <span>{error}</span>
           </div>
         )}
 
         <div className="form-control">
-          <label className="label">
+          <label className="label" htmlFor="login-email">
             <span className="label-text">Email</span>
           </label>
           <input
+            id="login-email"
             type="email"
             placeholder="you@example.com"
             className="input input-bordered w-full"
@@ -67,10 +68,11 @@ export default function LoginPage() {
         </div>
 
         <div className="form-control mt-4">
-          <label className="label">
+          <label className="label" htmlFor="login-password">
             <span className="label-text">Password</span>
           </label>
           <input
+            id="login-password"
             type="password"
             placeholder="••••••••"
             className="input input-bordered w-full"
@@ -85,9 +87,16 @@ export default function LoginPage() {
             type="submit"
             className="btn btn-primary w-full"
             disabled={isSubmitting}
+            aria-busy={isSubmitting}
           >
             {isSubmitting ? (
-              <span className="loading loading-spinner loading-sm"></span>
+              <>
+                <span
+                  className="loading loading-spinner loading-sm"
+                  aria-hidden="true"
+                ></span>
+                <span className="sr-only">Signing in…</span>
+              </>
             ) : (
               "Sign In"
             )}

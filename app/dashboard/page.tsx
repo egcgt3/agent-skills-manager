@@ -79,7 +79,11 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
-        <span className="loading loading-spinner loading-lg"></span>
+        <span
+          className="loading loading-spinner loading-lg"
+          role="status"
+          aria-label="Loading"
+        ></span>
       </div>
     );
   }
@@ -173,9 +177,16 @@ export default function DashboardPage() {
                     onClick={() => handleDelete(skill.id)}
                     className="btn btn-error btn-sm btn-outline"
                     disabled={deletingId === skill.id}
+                    aria-busy={deletingId === skill.id}
                   >
                     {deletingId === skill.id ? (
-                      <span className="loading loading-spinner loading-xs"></span>
+                      <>
+                        <span
+                          className="loading loading-spinner loading-xs"
+                          aria-hidden="true"
+                        ></span>
+                        <span className="sr-only">Deleting…</span>
+                      </>
                     ) : (
                       "Delete"
                     )}
